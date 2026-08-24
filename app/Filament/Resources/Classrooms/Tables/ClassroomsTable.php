@@ -1,32 +1,39 @@
 <?php
 
-namespace App\Filament\Resources\Users\Tables;
+namespace App\Filament\Resources\Classrooms\Tables;
 
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class UsersTable
+class ClassroomsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
+                TextColumn::make('Major.name')
+                    ->label('Major')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                    TextColumn::make('roles.name')
-                    ->label('Roles')
-                    ->searchable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
+                TextColumn::make('level')
+                    ->label('Grade')
+                    ->sortable()
+                    ->formatStateUsing(fn($state)=> match($state){
+                        10 => 'Grade X',
+                        11 => 'Grade XI',
+                        12 => 'Grade XII',
+                    }),
+                IconColumn::make('is_active')
+                    ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -40,9 +47,11 @@ class UsersTable
                 //
             ])
             ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-                DeleteAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

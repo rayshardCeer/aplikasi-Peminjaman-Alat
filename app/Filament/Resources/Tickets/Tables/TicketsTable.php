@@ -1,30 +1,35 @@
 <?php
 
-namespace App\Filament\Resources\Users\Tables;
+namespace App\Filament\Resources\Tickets\Tables;
 
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class UsersTable
+class TicketsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('name')
+                TextColumn::make('user_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('asset_id')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('ticket_number')
                     ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                    TextColumn::make('roles.name')
-                    ->label('Roles')
-                    ->searchable(),
-                TextColumn::make('email_verified_at')
+                TextColumn::make('qty')
+                    ->numeric()
+                    ->sortable(),
+                TextColumn::make('booked_at')
+                    ->dateTime()
+                    ->sortable(),
+                TextColumn::make('borrowed_at')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('created_at')
@@ -42,7 +47,6 @@ class UsersTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
-                DeleteAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
